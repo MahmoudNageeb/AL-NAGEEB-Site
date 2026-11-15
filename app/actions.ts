@@ -21,8 +21,6 @@ import {
   deleteUserInDb,
   findUserByEmailWithHash,
   findUserById,
-  getAuthorizedOwnerEmail,
-  hasAnyAdminInDb,
   insertOpinionInDb,
   isDatabaseConfigured,
   toggleHelpfulVoteInDb,
@@ -188,72 +186,6 @@ export interface AuthActionResult {
     password?: string;
   };
   redirectTo?: string;
-}
-
-export async function setupFirstAdminAction(payload: {
-  fullName: string;
-  email: string;
-  password: string;
-}): Promise<AuthActionResult> {
-  if (!isDatabaseConfigured()) {
-    return { ok: false, message: 'قاعدة البيانات غير مفعلة.' };
-  }
-
-  const check = validateAuthInput(payload, 'setup');
-  if (!check.valid || !check.sanitized) {
-    return {
-      ok: false,
-      message: 'يرجى استكمال البيانات بشكل صحيح.',
-      fieldErrors: check.errors,
-    };
-  }
-
-  try {
-    const adminExists = await hasAnyAdminInDb();
-    if (adminExists) {
-      return {
-        ok: false,
-        message: 'حساب الأدمن مفعّل مسبقاً. يرجى تسجيل الدخول بدلاً من ذلك.',
-      };
-    }
-
-    const authorizedEmail = getAuthorizedOwnerEmail();
-    if (normalizeEmail(check.sanitized.email) !== authorizedEmail) {
-      return {
-        ok: false,
-        message: `إعداد الأدمن الأول متاح فقط للبريد المصرح به (${authorizedEmail}).`,
-        fieldErrors: {
-          email: `يرجى استخدام البريد المصرح به: ${authorizedEmail}`,
-        },
-      };
-    }
-
-    const existing = await findUserByEmailWithHash(check.sanitized.email);
-    if (existing) {
-      return {
-        ok: false,
-        message: 'هذا البريد مسجل بالفعل. يرجى تسجيل الدخول.',
-      };
-    }
-
-    const user = await createUserInDb({
-      email: check.sanitized.email,
-      fullName: check.sanitized.fullName,
-      passwordHash: hashPassword(check.sanitized.password),
-      role: 'admin',
-    });
-
-    await setSessionCookie({ id: user.id, email: user.email, role: 'admin' });
-    revalidateAllPublicAndAdmin();
-    return {
-      ok: true,
-      message: 'تم إنشاء حساب الأدمن وتفعيل الجلسة بنجاح.',
-      redirectTo: '/admin',
-    };
-  } catch (err) {
-    console.error('Admin setup failed:', err instanceof Error ? err.message : 'Unknown error');
-    return { ok: false, message: 'حدث خطأ أثناء تفعيل حساب الأدمن.' };
-  }
 }
 
 export async function loginAction(payload: {

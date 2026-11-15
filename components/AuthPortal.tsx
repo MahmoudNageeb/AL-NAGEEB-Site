@@ -16,27 +16,21 @@ import {
 import type { ActiveSession } from '@/lib/session';
 
 interface AuthPortalProps {
-  hasAdmin: boolean;
-  authorizedOwnerEmail: string;
   session: ActiveSession | null;
   nextPath?: string;
   dbConnected: boolean;
 }
 
-type AuthTab = 'login' | 'register' | 'setup';
+type AuthTab = 'login' | 'register';
 
 export function AuthPortal({
-  hasAdmin,
-  authorizedOwnerEmail,
   session,
   nextPath,
   dbConnected,
 }: AuthPortalProps) {
-  const [activeTab, setActiveTab] = useState<AuthTab>(
-    !hasAdmin ? 'setup' : 'login',
-  );
-  const [fullName, setFullName] = useState(!hasAdmin ? 'محمود نجيب' : '');
-  const [email, setEmail] = useState(!hasAdmin ? authorizedOwnerEmail : '');
+  const [activeTab, setActiveTab] = useState<AuthTab>('login');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -56,10 +50,7 @@ export function AuthPortal({
     setActiveTab(tab);
     setFieldErrors({});
     setBanner(null);
-    if (tab === 'setup') {
-      setEmail(authorizedOwnerEmail);
-      setFullName('محمود نجيب');
-    } else if (tab === 'login') {
+    if (tab === 'login') {
       setFullName('');
     }
   };
@@ -190,17 +181,11 @@ export function AuthPortal({
             <div className="flex items-center gap-2.5">
               <ShieldCheck className="h-5 w-5 text-[var(--velvet-gold)]" aria-hidden="true" />
               <h1 className="font-display text-2xl font-bold text-[var(--velvet-text)]">
-                {activeTab === 'setup'
-                  ? 'تفعيل حساب الأدمن لأول مرة'
-                  : activeTab === 'register'
-                    ? 'اعمل حساب جديد'
-                    : 'تسجيل الدخول'}
+                {activeTab === 'register' ? 'اعمل حساب جديد' : 'تسجيل الدخول'}
               </h1>
             </div>
             <p className="text-xs leading-relaxed text-[var(--velvet-muted)]">
-              {activeTab === 'setup'
-                ? `حط كلمة المرور الخاصة بحساب الإدارة (${authorizedOwnerEmail}) عشان تتحكم في رابط التحميل والمميزات وآراء المستخدمين.`
-                : 'سجّل دخول بحساب الإدارة عشان تتابع وتعدّل محتوى الموقع، أو بحساب طالب عشان تشارك رأيك بسهولة.'}
+              سجّل دخول بحساب الإدارة عشان تتابع وتعدّل محتوى الموقع، أو بحساب طالب عشان تشارك رأيك بسهولة.
             </p>
           </div>
 
@@ -208,33 +193,8 @@ export function AuthPortal({
           <div
             role="tablist"
             aria-label="نوع العملية"
-            className="mt-6 grid gap-1.5 rounded-2xl border border-[var(--velvet-border)] bg-[var(--velvet-bg)] p-1.5"
-            style={{
-              gridTemplateColumns: !hasAdmin ? 'repeat(3, minmax(0, 1fr))' : 'repeat(2, minmax(0, 1fr))',
-            }}
+            className="mt-6 grid grid-cols-2 gap-1.5 rounded-2xl border border-[var(--velvet-border)] bg-[var(--velvet-bg)] p-1.5"
           >
-            {!hasAdmin && (
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeTab === 'setup'}
-                onClick={() => switchTab('setup')}
-                className={`relative rounded-xl px-2.5 py-2 text-xs font-bold transition-colors whitespace-nowrap ${
-                  activeTab === 'setup'
-                    ? 'text-[#1A1408]'
-                    : 'text-[var(--velvet-muted)] hover:text-[var(--velvet-text)]'
-                }`}
-              >
-                {activeTab === 'setup' && (
-                  <motion.span
-                    layoutId="auth-tab-pill"
-                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                    className="absolute inset-0 rounded-xl bg-[#F0C97A]"
-                  />
-                )}
-                <span className="relative z-10">تفعيل الأدمن</span>
-              </button>
-            )}
             <button
               type="button"
               role="tab"
@@ -388,13 +348,7 @@ export function AuthPortal({
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#F0C97A] px-5 py-3 font-display text-sm font-bold text-[#1A1408] transition-colors hover:bg-[#f5d593] disabled:opacity-60"
             >
               {isPending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
-              <span>
-                {activeTab === 'setup'
-                  ? 'تفعيل حساب الأدمن والدخول'
-                  : activeTab === 'register'
-                    ? 'اعمل الحساب وكمّل'
-                    : 'دخول'}
-              </span>
+              <span>{activeTab === 'register' ? 'اعمل الحساب وكمّل' : 'دخول'}</span>
             </motion.button>
           </form>
         </div>

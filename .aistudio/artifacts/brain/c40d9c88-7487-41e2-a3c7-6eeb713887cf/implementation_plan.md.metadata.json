@@ -1,0 +1,6 @@
+{
+  "summary":  "تحديث خطة بناء موقع الهبوط والتحميل الرسمي لتطبيق AL NAGEEB v2.7 للربط المباشر مع قاعدة بيانات Neon PostgreSQL (فرع production لمشروع wild-bar-56394367) عبر Neon CLI و .env.local مع الحفاظ على تصميم Academic Velvet OS ونظام التحميل والمراجعات ودليل الاستخدام.",
+  "updatedAt":  "2026-11-13T22:44:02.966351273Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

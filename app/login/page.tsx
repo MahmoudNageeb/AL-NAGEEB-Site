@@ -1,11 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import {
-  getAuthorizedOwnerEmail,
-  getPublicSiteSnapshot,
-  hasAnyAdminInDb,
-} from '@/lib/db';
+import { getPublicSiteSnapshot } from '@/lib/db';
 import { getCurrentSession } from '@/lib/session';
 import { Navbar } from '@/components/Navbar';
 import { AuthPortal } from '@/components/AuthPortal';
@@ -24,10 +20,9 @@ export default async function LoginPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const params = await searchParams;
-  const [session, snapshot, hasAdmin] = await Promise.all([
+  const [session, snapshot] = await Promise.all([
     getCurrentSession(),
     getPublicSiteSnapshot(),
-    hasAnyAdminInDb().catch(() => false),
   ]);
 
   if (session?.role === 'admin' && params.next) {
@@ -38,8 +33,6 @@ export default async function LoginPage({
     <div className="flex min-h-screen flex-col bg-[var(--velvet-bg)]">
       <Navbar version={snapshot.settings.version} session={session} />
       <AuthPortal
-        hasAdmin={hasAdmin}
-        authorizedOwnerEmail={getAuthorizedOwnerEmail()}
         session={session}
         nextPath={params.next}
         dbConnected={snapshot.dbConnected}

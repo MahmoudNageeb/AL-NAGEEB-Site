@@ -59,6 +59,17 @@ test('validateAuthInput enforces required fields and email formatting', () => {
   assert.equal(good.valid, true);
   assert.equal(good.sanitized?.fullName, 'محمود نجيب');
   assert.equal(good.sanitized?.email, 'test@example.com');
+
+  const loginOk = validateAuthInput(
+    { email: 'MahmoudNageeb2709@gmail.com', password: 'any-password' },
+    'login',
+  );
+  assert.equal(loginOk.valid, true);
+  assert.equal(loginOk.sanitized?.email, 'mahmoudnageeb2709@gmail.com');
+
+  const loginMissing = validateAuthInput({ email: 'a@b.com', password: '' }, 'login');
+  assert.equal(loginMissing.valid, false);
+  assert.ok(loginMissing.errors.password);
 });
 
 test('resolveCookieSecurityOptions uses SameSite=None Secure Partitioned for HTTPS/iFrame and Lax for local HTTP', () => {

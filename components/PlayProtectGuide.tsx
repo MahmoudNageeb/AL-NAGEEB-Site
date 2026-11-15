@@ -12,10 +12,10 @@ import {
   X,
   ZoomIn,
 } from 'lucide-react';
-import step1Img from '@/public/assets/aistudio/Screenshot_20261108_190908_com_android_vending_MainActivity_edit_1524954844162071_0a3a842a.jpg';
-import step2Img from '@/public/assets/aistudio/Screenshot_20261108_190915_com_android_vending_MainActivity_edit_1525218369577178_8c4e7838.jpg';
-import step3Img from '@/public/assets/aistudio/Screenshot_20261108_190920_com_android_vending_MainActivity_edit_1525102058035452_06e0f7d0.jpg';
-import step4Img from '@/public/assets/aistudio/Screenshot_20261108_190938_com_android_vending_MainActivity_edit_1525136378332522_3536f64f.jpg';
+import step1Img from '@/src/assets/images/play_protect_step_1.jpg';
+import step2Img from '@/src/assets/images/play_protect_step_2.jpg';
+import step3Img from '@/src/assets/images/play_protect_step_3.jpg';
+import step4Img from '@/src/assets/images/play_protect_step_4.jpg';
 import { SpotlightCard } from './SpotlightCard';
 
 interface PlayProtectStep {

@@ -2,7 +2,6 @@ import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 import {
   hashPassword,
-  normalizeEmail,
   resolveCookieSecurityOptions,
   signSessionToken,
   validateAuthInput,
@@ -11,8 +10,6 @@ import {
 import {
   createUserInDb,
   findUserByEmailWithHash,
-  getAuthorizedOwnerEmail,
-  hasAnyAdminInDb,
   isDatabaseConfigured,
   touchUserLogin,
 } from '@/lib/db';
@@ -82,100 +79,6 @@ export async function POST(request: Request) {
       { ok: false, message: 'قاعدة البيانات غير متصلة حالياً.' },
       { status: 503 },
     );
-  }
-
-  if (mode === 'setup') {
-    const check = validateAuthInput(
-      {
-        fullName: body.fullName ?? '',
-        email: body.email ?? '',
-        password: body.password ?? '',
-      },
-      'setup',
-    );
-    if (!check.valid || !check.sanitized) {
-      return NextResponse.json(
-        {
-          ok: false,
-          message: 'يرجى استكمال البيانات بشكل صحيح.',
-          fieldErrors: check.errors,
-        },
-        { status: 400 },
-      );
-    }
-
-    try {
-      const adminExists = await hasAnyAdminInDb();
-      if (adminExists) {
-        return NextResponse.json(
-          {
-            ok: false,
-            message: 'حساب الأدمن مفعّل مسبقاً. يرجى تسجيل الدخول بدلاً من ذلك.',
-          },
-          { status: 409 },
-        );
-      }
-
-      const authorizedEmail = getAuthorizedOwnerEmail();
-      if (normalizeEmail(check.sanitized.email) !== authorizedEmail) {
-        return NextResponse.json(
-          {
-            ok: false,
-            message: `إعداد الأدمن الأول متاح فقط للبريد المصرح به (${authorizedEmail}).`,
-            fieldErrors: {
-              email: `يرجى استخدام البريد المصرح به: ${authorizedEmail}`,
-            },
-          },
-          { status: 403 },
-        );
-      }
-
-      const existing = await findUserByEmailWithHash(check.sanitized.email);
-      if (existing) {
-        return NextResponse.json(
-          {
-            ok: false,
-            message: 'هذا البريد مسجل بالفعل. يرجى تسجيل الدخول.',
-          },
-          { status: 409 },
-        );
-      }
-
-      const user = await createUserInDb({
-        email: check.sanitized.email,
-        fullName: check.sanitized.fullName,
-        passwordHash: hashPassword(check.sanitized.password),
-        role: 'admin',
-      });
-
-      const token = signSessionToken({
-        uid: user.id,
-        email: user.email,
-        role: 'admin',
-      });
-
-      const res = NextResponse.json({
-        ok: true,
-        message: 'تم إنشاء حساب الأدمن وتفعيل الجلسة بنجاح.',
-        redirectTo: '/admin',
-      });
-      res.cookies.set(
-        SESSION_COOKIE_NAME,
-        token,
-        getRequestCookieOpts(request, SESSION_MAX_AGE_SECONDS),
-      );
-      revalidateAuthRoutes();
-      return res;
-    } catch (err) {
-      console.error(
-        'API admin setup failed:',
-        err instanceof Error ? err.message : 'Unknown error',
-      );
-      return NextResponse.json(
-        { ok: false, message: 'حدث خطأ أثناء تفعيل حساب الأدمن.' },
-        { status: 500 },
-      );
-    }
   }
 
   if (mode === 'register') {

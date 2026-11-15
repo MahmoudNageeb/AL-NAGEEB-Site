@@ -42,7 +42,7 @@ export function validateAuthInput(
     email: string;
     password: string;
   },
-  mode: 'login' | 'register' | 'setup',
+  mode: 'login' | 'register',
 ): AuthValidationResult {
   const errors: AuthValidationResult['errors'] = {};
   const email = normalizeEmail(input.email ?? '');
