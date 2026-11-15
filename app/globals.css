@@ -4,6 +4,10 @@
 
 @layer base {
   :root {
+    --font-calligraphy: 'Amiri', serif;
+    --font-cairo: 'Cairo', system-ui, sans-serif;
+    --font-tajawal: 'Tajawal', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
     --velvet-bg: #F7F4EC;
     --velvet-bg-deep: #F2EDE2;
     --velvet-surface: #FFFDF8;

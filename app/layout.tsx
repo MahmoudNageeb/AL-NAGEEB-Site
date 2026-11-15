@@ -1,37 +1,8 @@
 import type { Metadata } from 'next';
-import { Amiri, Cairo, Tajawal, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { MotionChrome } from '@/components/MotionChrome';
 import { VisitTracker } from '@/components/VisitTracker';
-
-const amiri = Amiri({
-  subsets: ['arabic'],
-  weight: ['400', '700'],
-  variable: '--font-calligraphy',
-  display: 'swap',
-});
-
-const cairo = Cairo({
-  subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-cairo',
-  display: 'swap',
-});
-
-const tajawal = Tajawal({
-  subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-tajawal',
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['500', '700'],
-  variable: '--font-mono',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'AL NAGEEB | النجيب — رفيقك الذكي للمذاكرة والتركيز',
@@ -61,9 +32,22 @@ export default function RootLayout({
       lang="ar"
       dir="rtl"
       data-scroll-behavior="smooth"
-      className={`dark ${amiri.variable} ${cairo.variable} ${tajawal.variable} ${jetbrainsMono.variable}`}
+      className="dark"
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Tajawal:wght@400;500;700&display=swap"
+        />
+      </head>
       <body
         className="min-h-screen bg-[var(--velvet-bg)] text-[var(--velvet-text)] selection:bg-[#F0C97A]/30 selection:text-[var(--velvet-text)]"
         suppressHydrationWarning
