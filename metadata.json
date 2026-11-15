@@ -1,0 +1,6 @@
+{
+  "name": "AL NAGEEB",
+  "description": "الموقع الرسمي لتحميل تطبيق النجيب (AL NAGEEB v2.7) — منظومة الدراسة الشاملة، السبورة الذكية اللانهائية، ومؤقت التطبيقات ودرع التركيز بدون إنترنت.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

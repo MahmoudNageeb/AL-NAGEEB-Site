@@ -1,0 +1,47 @@
+تفضل يا باش مهندس محمود، هذه الأوامر بعد تعديل المسار إلى `E:\MAHMOUD\AL NAGEEB Site` والريبو إلى `AL-NAGEEB-Site.git` (مع إضافة `node_modules/` و `.next/` و `dist/` لملف `.gitignore` لتجنب رفع ملفات الحزم الثقيلة لمشاريع الويب):
+
+**1. أوامر الرفع الكامل من الصفر (تنظيف السجل والرفع لأول مرة)**
+
+```cmd
+cd /d "E:\MAHMOUD\AL NAGEEB Site"
+rmdir /s /q .git
+git init
+git branch -M main
+git config --global user.name "MahmoudNageeb"
+git config --global user.email "mahmoudnageeb2709@gmail.com"
+git config --global http.postBuffer 524288000
+git config --global http.lowSpeedLimit 0
+git config --global http.lowSpeedTime 999999
+echo node_modules/> .gitignore
+echo .next/>> .gitignore
+echo dist/>> .gitignore
+echo build/>> .gitignore
+echo .env>> .gitignore
+echo .env.local>> .gitignore
+echo public/assets/>> .gitignore
+echo *.zip>> .gitignore
+echo *.tar>> .gitignore
+echo .aistudio/>> .gitignore
+git add .
+git commit -m "Upload AL NAGEEB Site clean project"
+git remote add origin https://github.com/MahmoudNageeb/AL-NAGEEB-Site.git
+git push -u origin main --force
+
+```
+
+**2. أوامر تحديث المشروع مستقبلاً (بعد أي تعديل في الكود)**
+
+```cmd
+cd /d "E:\MAHMOUD\AL NAGEEB Site"
+git add .
+git commit -m "Update site files"
+git push -u origin main --force
+
+```
+
+**3. أمر التحديث في سطر واحد (لتفادي مشكلة التصاق الأوامر عند النسخ من ملف نصي)**
+
+```cmd
+cd /d "E:\MAHMOUD\AL NAGEEB Site" && git add . && git commit -m "Update site files" && git push -u origin main --force
+
+```
