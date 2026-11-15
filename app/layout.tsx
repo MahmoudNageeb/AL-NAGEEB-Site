@@ -20,6 +20,11 @@ export const metadata: Metadata = {
     description:
       'الموقع الرسمي لتطبيق النجيب للأندرويد — مكتبة دراسية وسبورة ذكية ومؤقت تركيز شغّال أوفلاين بالكامل.',
   },
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
